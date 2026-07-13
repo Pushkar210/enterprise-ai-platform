@@ -31,3 +31,12 @@ module "lambda" {
   environment     = var.environment
   lambda_role_arn = module.iam.lambda_role_arn
 }
+
+module "apigateway" {
+  source = "./modules/apigateway"
+
+  project_name         = var.project_name
+  environment          = var.environment
+  lambda_function_name = module.lambda.lambda_function_name
+  lambda_invoke_arn    = module.lambda.lambda_invoke_arn
+}

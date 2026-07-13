@@ -29,3 +29,15 @@ output "lambda_function_name" {
 output "lambda_function_arn" {
   value = module.lambda.lambda_function_arn
 }
+
+output "lambda_invoke_arn" {
+  value = module.lambda.lambda_invoke_arn
+}
+
+output "api_endpoint" {
+  value = module.apigateway.api_endpoint
+}
+
+output "health_url" {
+  value = module.apigateway.health_url
+}
