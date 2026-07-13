@@ -13,3 +13,19 @@ output "table_name" {
 output "table_arn" {
   value = module.dynamodb.table_arn
 }
+
+output "lambda_role_arn" {
+  value = module.iam.lambda_role_arn
+}
+
+output "lambda_role_name" {
+  value = module.iam.lambda_role_name
+}
+
+output "lambda_function_name" {
+  value = module.lambda.lambda_function_name
+}
+
+output "lambda_function_arn" {
+  value = module.lambda.lambda_function_arn
+}

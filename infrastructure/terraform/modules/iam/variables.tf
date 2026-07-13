@@ -1,0 +1,15 @@
+variable "project_name" {
+  type = string
+}
+
+variable "environment" {
+  type = string
+}
+
+variable "bucket_arn" {
+  type = string
+}
+
+variable "table_arn" {
+  type = string
+}
