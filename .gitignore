@@ -1,4 +1,12 @@
-.terraform/
+# Terraform
+**/.terraform/*
+# Keep .terraform.lock.hcl committed to lock provider versions
 *.tfstate
 *.tfstate.*
-terraform.tfvars
+*.tfvars
+*.tfvars.json
+crash.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
