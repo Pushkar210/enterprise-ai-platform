@@ -30,6 +30,8 @@ module "lambda" {
   project_name    = var.project_name
   environment     = var.environment
   lambda_role_arn = module.iam.lambda_role_arn
+  table_name      = module.dynamodb.table_name
+  bucket_name     = module.s3.bucket_name
 }
 
 module "apigateway" {

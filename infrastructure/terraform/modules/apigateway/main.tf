@@ -37,3 +37,16 @@ resource "aws_lambda_permission" "allow_apigateway" {
   principal     = "apigateway.amazonaws.com"
   source_arn    = "${aws_apigatewayv2_api.main.execution_arn}/*/*"
 }
+resource "aws_apigatewayv2_route" "upload" {
+  api_id = aws_apigatewayv2_api.main.id
+
+  route_key = "POST /upload"
+  target    = "integrations/${aws_apigatewayv2_integration.lambda.id}"
+}
+
+resource "aws_apigatewayv2_route" "upload_url" {
+  api_id = aws_apigatewayv2_api.main.id
+
+  route_key = "POST /upload-url"
+  target    = "integrations/${aws_apigatewayv2_integration.lambda.id}"
+}

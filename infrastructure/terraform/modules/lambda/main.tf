@@ -17,6 +17,14 @@ resource "aws_lambda_function" "upload" {
   timeout     = 30
   memory_size = 256
 
+  environment {
+  variables = {
+    DOCUMENTS_TABLE_NAME = var.table_name
+    BUCKET_NAME          = var.bucket_name
+    ENVIRONMENT          = var.environment
+  }
+}
+
   depends_on = [
     data.archive_file.upload_lambda
   ]
