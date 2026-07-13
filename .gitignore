@@ -13,4 +13,4 @@ override.tf.json
 # macOS
 .DS_Store
 # Lambda build artifacts
-*.zip
+backend/lambda/**/lambda.zip
