@@ -50,3 +50,9 @@ resource "aws_apigatewayv2_route" "upload_url" {
   route_key = "POST /upload-url"
   target    = "integrations/${aws_apigatewayv2_integration.lambda.id}"
 }
+resource "aws_apigatewayv2_route" "upload_complete" {
+  api_id = aws_apigatewayv2_api.main.id
+
+  route_key = "POST /upload/complete"
+  target    = "integrations/${aws_apigatewayv2_integration.lambda.id}"
+}

@@ -114,6 +114,52 @@ def upload_url_response(event):
         "upload_url": upload_details["upload_url"]
     })
 
+def upload_complete_response(event):
+    try:
+        body = json.loads(event.get("body") or "{}")
+    except json.JSONDecodeError:
+        return build_response(400, {
+            "success": False,
+            "message": "Invalid JSON body"
+        })
+
+    document_id = body.get("document_id")
+    filename = body.get("filename")
+    object_key = body.get("object_key")
+
+    if not document_id or not filename or not object_key:
+        return build_response(400, {
+            "success": False,
+            "message": "document_id, filename and object_key are required"
+        })
+
+    try:
+        s3.head_object(
+            Bucket=os.environ["BUCKET_NAME"],
+            Key=object_key
+        )
+    except Exception:
+        return build_response(400, {
+            "success": False,
+            "message": "File not found in S3"
+        })
+
+    document_item = {
+        "document_id": document_id,
+        "filename": filename,
+        "object_key": object_key,
+        "status": "uploaded",
+        "created_at": datetime.now(timezone.utc).isoformat()
+    }
+
+    documents_table.put_item(Item=document_item)
+
+    return build_response(200, {
+        "success": True,
+        "message": "Upload completed",
+        "document": document_item
+    })
+
 def lambda_handler(event, context):
     route_key = event.get("routeKey")
 
@@ -129,4 +175,7 @@ def lambda_handler(event, context):
     return build_response(404, {
         "success": False,
         "message": "Route not found"
+
+    if route_key == "POST /upload/complete":
+        return upload_complete_response(event)    
     })

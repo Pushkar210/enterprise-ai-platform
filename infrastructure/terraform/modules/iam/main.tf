@@ -31,7 +31,9 @@ resource "aws_iam_policy" "lambda_policy" {
 
         Action = [
           "s3:GetObject",
-          "s3:PutObject"
+          "s3:PutObject",
+          "s3:HeadObject",
+          "s3:DeleteObject"
         ]
 
         Resource = [
