@@ -64,3 +64,10 @@ resource "aws_apigatewayv2_route" "documents" {
   route_key = "GET /documents"
   target    = "integrations/${aws_apigatewayv2_integration.lambda.id}"
 }
+
+resource "aws_apigatewayv2_route" "document" {
+  api_id = aws_apigatewayv2_api.main.id
+
+  route_key = "GET /documents/{document_id}"
+  target    = "integrations/${aws_apigatewayv2_integration.lambda.id}"
+}
