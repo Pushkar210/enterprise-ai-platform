@@ -71,3 +71,10 @@ resource "aws_apigatewayv2_route" "document" {
   route_key = "GET /documents/{document_id}"
   target    = "integrations/${aws_apigatewayv2_integration.lambda.id}"
 }
+
+resource "aws_apigatewayv2_route" "delete_document" {
+  api_id = aws_apigatewayv2_api.main.id
+
+  route_key = "DELETE /documents/{document_id}"
+  target    = "integrations/${aws_apigatewayv2_integration.lambda.id}"
+}
