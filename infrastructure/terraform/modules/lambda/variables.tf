@@ -17,3 +17,11 @@ variable "table_name" {
 variable "bucket_name" {
   type = string
 }
+
+variable "lambda_name" {
+  type = string
+}
+
+variable "source_path" {
+  type = string
+}

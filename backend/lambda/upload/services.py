@@ -1,4 +1,5 @@
 from datetime import datetime, timezone
+import mimetypes
 import os
 
 import boto3
@@ -15,12 +16,17 @@ document_bucket = os.environ["BUCKET_NAME"]
 def generate_upload_url(document_id, filename):
     object_key = f"documents/{document_id}/{filename}"
 
+    content_type, _ = mimetypes.guess_type(filename)
+
+    if content_type is None:
+        content_type = "application/octet-stream"
+
     upload_url = s3_client.generate_presigned_url(
         ClientMethod="put_object",
         Params={
             "Bucket": document_bucket,
             "Key": object_key,
-            "ContentType": "application/pdf"
+            "ContentType": content_type
         },
         ExpiresIn=600
     )

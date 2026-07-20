@@ -22,16 +22,28 @@ output "lambda_role_name" {
   value = module.iam.lambda_role_name
 }
 
-output "lambda_function_name" {
-  value = module.lambda.lambda_function_name
+output "upload_lambda_function_name" {
+  value = module.upload_lambda.lambda_function_name
 }
 
-output "lambda_function_arn" {
-  value = module.lambda.lambda_function_arn
+output "upload_lambda_function_arn" {
+  value = module.upload_lambda.lambda_function_arn
 }
 
-output "lambda_invoke_arn" {
-  value = module.lambda.lambda_invoke_arn
+output "upload_lambda_invoke_arn" {
+  value = module.upload_lambda.lambda_invoke_arn
+}
+
+output "processor_lambda_function_name" {
+  value = module.processor_lambda.lambda_function_name
+}
+
+output "processor_lambda_function_arn" {
+  value = module.processor_lambda.lambda_function_arn
+}
+
+output "processor_lambda_invoke_arn" {
+  value = module.processor_lambda.lambda_invoke_arn
 }
 
 output "api_endpoint" {

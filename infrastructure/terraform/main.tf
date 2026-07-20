@@ -24,7 +24,7 @@ module "iam" {
   table_arn  = module.dynamodb.table_arn
 }
 
-module "lambda" {
+module "upload_lambda" {
   source = "./modules/lambda"
 
   project_name    = var.project_name
@@ -32,6 +32,43 @@ module "lambda" {
   lambda_role_arn = module.iam.lambda_role_arn
   table_name      = module.dynamodb.table_name
   bucket_name     = module.s3.bucket_name
+
+  lambda_name = "upload"
+  source_path = "backend/lambda/upload"
+}
+
+module "processor_lambda" {
+  source = "./modules/lambda"
+
+  project_name    = var.project_name
+  environment     = var.environment
+  lambda_role_arn = module.iam.lambda_role_arn
+  table_name      = module.dynamodb.table_name
+  bucket_name     = module.s3.bucket_name
+
+  lambda_name = "processor"
+  source_path = "backend/lambda/processor"
+}
+
+resource "aws_lambda_permission" "allow_s3_processor" {
+  statement_id  = "AllowExecutionFromS3"
+  action        = "lambda:InvokeFunction"
+  function_name = module.processor_lambda.lambda_function_name
+  principal     = "s3.amazonaws.com"
+  source_arn    = module.s3.bucket_arn
+}
+
+resource "aws_s3_bucket_notification" "processor_trigger" {
+  bucket = module.s3.bucket_name
+
+  lambda_function {
+    lambda_function_arn = module.processor_lambda.lambda_function_arn
+    events              = ["s3:ObjectCreated:*"]
+  }
+
+  depends_on = [
+    aws_lambda_permission.allow_s3_processor
+  ]
 }
 
 module "apigateway" {
@@ -39,6 +76,6 @@ module "apigateway" {
 
   project_name         = var.project_name
   environment          = var.environment
-  lambda_function_name = module.lambda.lambda_function_name
-  lambda_invoke_arn    = module.lambda.lambda_invoke_arn
+  lambda_function_name = module.upload_lambda.lambda_function_name
+  lambda_invoke_arn    = module.upload_lambda.lambda_invoke_arn
 }
