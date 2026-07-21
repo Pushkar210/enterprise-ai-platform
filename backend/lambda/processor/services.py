@@ -6,7 +6,9 @@ from extractors.pdf import extract_text as extract_pdf_text
 from extractors.txt import extract_text as extract_txt_text
 
 s3 = boto3.client("s3")
+dynamodb = boto3.resource("dynamodb")
 
+table = dynamodb.Table(os.environ["DOCUMENTS_TABLE_NAME"])
 
 def get_document(bucket_name, object_key):
     response = s3.get_object(
@@ -34,3 +36,23 @@ def get_document(bucket_name, object_key):
         "file_size": file_size,
         "content": content
     }
+
+
+def update_document(document_id, content):
+    table.update_item(
+        Key={
+            "document_id": document_id
+        },
+        UpdateExpression="""
+            SET #status = :status,
+                #content = :content
+        """,
+        ExpressionAttributeNames={
+            "#status": "status",
+            "#content": "content"
+        },
+        ExpressionAttributeValues={
+            ":status": "processed",
+            ":content": content
+        }
+    )

@@ -24,7 +24,7 @@ module "iam" {
   table_arn  = module.dynamodb.table_arn
 }
 
-module "upload_lambda" {
+module "api_lambda" {
   source = "./modules/lambda"
 
   project_name    = var.project_name
@@ -33,8 +33,8 @@ module "upload_lambda" {
   table_name      = module.dynamodb.table_name
   bucket_name     = module.s3.bucket_name
 
-  lambda_name = "upload"
-  source_path = "backend/lambda/upload"
+  lambda_name = "api"
+  source_path = "backend/lambda/api" 
 }
 
 module "processor_lambda" {
@@ -76,6 +76,6 @@ module "apigateway" {
 
   project_name         = var.project_name
   environment          = var.environment
-  lambda_function_name = module.upload_lambda.lambda_function_name
-  lambda_invoke_arn    = module.upload_lambda.lambda_invoke_arn
+  lambda_function_name = module.api_lambda.lambda_function_name
+  lambda_invoke_arn    = module.api_lambda.lambda_invoke_arn
 }

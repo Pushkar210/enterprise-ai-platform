@@ -5,6 +5,7 @@ from handlers import (
     list_documents_response,
     get_document_response,
     delete_document_response,
+    ask_response,
 )
 
 from utils import build_response
@@ -31,6 +32,9 @@ def lambda_handler(event, context):
 
     if route_key == "POST /upload":
         return upload_response(event)
+
+    if route_key == "POST /ask":
+        return ask_response(event)
 
     return build_response(
         404, 

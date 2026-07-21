@@ -1,6 +1,6 @@
 import json
 
-from services import get_document
+from services import get_document, update_document
 
 
 def lambda_handler(event, context):
@@ -11,6 +11,7 @@ def lambda_handler(event, context):
 
     bucket_name = record["s3"]["bucket"]["name"]
     object_key = record["s3"]["object"]["key"]
+    document_id = object_key.split("/")[1]    
 
     document = get_document(bucket_name, object_key)
 
@@ -19,6 +20,13 @@ def lambda_handler(event, context):
     print(f"File size: {document['file_size']} bytes")
     print("File content:")
     print(document["content"])
+
+    update_document(
+        document_id=document_id,
+        content=document["content"]
+    )
+
+    print(f"Document {document_id} updated successfully.")
 
     return {
         "statusCode": 200,

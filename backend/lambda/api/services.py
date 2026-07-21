@@ -101,3 +101,14 @@ def delete_document(document_id):
     )
 
     return True
+
+def ask_document(document_id, question):
+    document = get_document(document_id)
+
+    if not document:
+        return None
+
+    return {
+        "document": document,
+        "question": question
+    }
