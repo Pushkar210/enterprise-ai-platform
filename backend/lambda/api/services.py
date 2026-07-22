@@ -1,4 +1,5 @@
 from datetime import datetime, timezone
+from llm.factory import get_llm_provider
 import mimetypes
 import os
 
@@ -108,7 +109,19 @@ def ask_document(document_id, question):
     if not document:
         return None
 
+    if document.get("status") != "processed":
+        raise ValueError("Document is not yet processed.")
+
+    document_content = document.get("content")
+
+    if not document_content:
+        raise ValueError("Document content is unavailable.")
+
+    provider = get_llm_provider()
+    answer = provider.ask(document_content, question)
+
     return {
-        "document": document,
-        "question": question
+        "document_id": document_id,
+        "question": question,
+        "answer": answer,
     }

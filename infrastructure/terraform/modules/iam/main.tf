@@ -1,3 +1,4 @@
+data "aws_caller_identity" "current" {}
 resource "aws_iam_role" "lambda_role" {
   name = "${var.project_name}-${var.environment}-lambda-role"
 
@@ -53,6 +54,16 @@ resource "aws_iam_policy" "lambda_policy" {
         ]
 
         Resource = var.table_arn
+      },
+
+      {
+        Effect = "Allow"
+
+        Action = [
+          "ssm:GetParameter"
+        ]
+
+        Resource = "arn:aws:ssm:${var.aws_region}:${data.aws_caller_identity.current.account_id}:parameter/enterprise-ai-platform/gemini-api-key"
       },
 
       {

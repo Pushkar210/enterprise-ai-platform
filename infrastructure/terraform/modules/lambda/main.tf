@@ -15,10 +15,12 @@ resource "aws_lambda_function" "this" {
   memory_size = 256
 
   environment {
-    variables = {
-      DOCUMENTS_TABLE_NAME = var.table_name
-      BUCKET_NAME          = var.bucket_name
-      ENVIRONMENT          = var.environment
-    }
+  variables = {
+    DOCUMENTS_TABLE_NAME   = var.table_name
+    BUCKET_NAME            = var.bucket_name
+    ENVIRONMENT            = var.environment
+    LLM_PROVIDER           = "gemini"
+    GEMINI_API_KEY_PARAMETER = "/enterprise-ai-platform/gemini-api-key"
   }
+}
 }

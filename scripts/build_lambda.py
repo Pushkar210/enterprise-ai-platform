@@ -24,20 +24,26 @@ if zip_file.exists():
 
 build_dir.mkdir()
 
-# Install dependencies if requirements.txt exists
+# Install dependencies inside the official AWS Lambda Python 3.13 container
 requirements = source / "requirements.txt"
 
 if requirements.exists():
     subprocess.check_call([
-        sys.executable,
-        "-m",
-        "pip",
-        "install",
-        "-r",
-        str(requirements),
-        "-t",
-        str(build_dir)
-    ])
+    "docker",
+    "run",
+    "--rm",
+    "--platform",
+    "linux/amd64",
+    "--entrypoint",
+    "/bin/bash",
+    "-v",
+    f"{source}:/var/task",
+    "-v",
+    f"{build_dir}:/opt/build",
+    "public.ecr.aws/lambda/python:3.13",
+    "-c",
+    "pip install -r /var/task/requirements.txt -t /opt/build"
+])
 
 # Copy source files
 for item in source.iterdir():

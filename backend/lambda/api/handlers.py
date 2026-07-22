@@ -171,34 +171,54 @@ def delete_document_response(event):
         })
 
 def ask_response(event):
-
-    try:
-        body = json.loads(event.get("body") or "{}")
-    except json.JSONDecodeError:
-        return build_response(400, {
-            "success": False,
-            "message": "Invalid JSON body"
-        })
+    body = json.loads(event.get("body", "{}"))
 
     document_id = body.get("document_id")
     question = body.get("question")
 
     if not document_id or not question:
-        return build_response(400, {
-            "success": False,
-            "message": "document_id and question are required"
-        })
+        return build_response(
+            400,
+            {
+                "success": False,
+                "message": "document_id and question are required.",
+            },
+        )
 
-    result = ask_document(document_id, question)
+    try:
+        result = ask_document(document_id, question)
 
-    if not result:
-        return build_response(404, {
-            "success": False,
-            "message": "Document not found"
-        })
+        if result is None:
+            return build_response(
+                404,
+                {
+                    "success": False,
+                    "message": "Document not found.",
+                },
+            )
 
-    return build_response(200, {
-        "success": True,
-        "message": "Ask endpoint is ready",
-        "data": result
-    })
+        return build_response(
+            200,
+            {
+                "success": True,
+                "data": result,
+            },
+        )
+
+    except ValueError as e:
+        return build_response(
+            400,
+            {
+                "success": False,
+                "message": str(e),
+            },
+        )
+
+    except Exception as e:
+        return build_response(
+            500,
+            {
+                "success": False,
+                "message": str(e),
+            },
+        )

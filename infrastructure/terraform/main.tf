@@ -20,6 +20,8 @@ module "iam" {
   project_name = var.project_name
   environment  = var.environment
 
+  aws_region = var.aws_region
+
   bucket_arn = module.s3.bucket_arn
   table_arn  = module.dynamodb.table_arn
 }
